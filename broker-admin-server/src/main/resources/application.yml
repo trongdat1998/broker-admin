@@ -1,0 +1,148 @@
+spring:
+  application:
+    name: broker-admin-server
+
+  redis:
+    lettuce:
+      pool:
+        max-active: 200
+        max-idle: 50
+        max-wait: 4s
+    timeout: 10s
+    cluster:
+      nodes:
+        - broker-admin-redis:6379
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 100MB
+
+server:
+  port: 7504
+  use-forward-headers: true
+  tomcat:
+    remote-ip-header: X-Real-IP
+    protocol-header: X-Forwarded-Proto
+    uri-encoding: UTF-8
+    max-threads: 500
+    accesslog:
+      pattern: "%{X-Forwarded-For}i %a %l %u %t '%r' %s  %b (%D ms) \"%{Referer}i\" \"%{User-Agent}i\" "
+      enabled: true
+      directory: ./logs/
+    basedir: ./
+
+admincommon:
+  application-name: broker-admin-grpc-server.broker
+  grpc-port: 7405
+
+
+saas-admin-server:
+  server-host: saas-admin-server
+  server-port: 7501
+otc-server:
+  server-host: otc-server
+  server-port: 7231
+
+authorize:
+  newversion: true
+  referer:
+    check: false
+    domain: "https://card.headsc.dev/"
+  ignore:
+    resource: "/internal/metrics,/org_api/,/api/os,/api/v1/user/,/api/v1/internal/,/api/v1/platform_account,/internal/health,/api/v1/role_auth/user/auth_path/list,/api/v1/helper/,/api/v1/country/list,/api/v1/storage,/api/v1/order/query_quote_tokens,/api/v1/token/query,/api/v1/symbol/query,/api/v1/broker/query/broker/info,/api/v1/token/query,/api/v1/exchange"
+    garesource: "/api/v1/security"
+  gaenable: true
+  token:
+    jwt:
+      secret: XXX
+      expire_in_seconds: 36000
+  cookie:
+    domain: "headsc.dev"
+    secure: false
+
+awsstorage:
+  aws:
+    bucket: private.headsc.dev
+    access-key: XXX
+    secret-key: XXX
+    region-name: ap-southeast-1
+  access-os-file-key: XXX
+  public:
+    static-url: https://static.headsc.dev/
+    prefix: banner/
+    aws:
+      bucket: static.headsc.dev
+      access-key: XXX
+      secret-key: XXX
+      region-name: ap-southeast-1
+qcloud:
+  cdn:
+    secret-id: XXX
+    secret-key: XXX
+
+borker:
+  internal-url-template: http://broker-%s.headsc.dev
+broker:
+  proxy: false
+  api-key: "XXX"
+  secret-key: "XXX"
+  #需要配置同broker-server的redis前缀一致,涉及admin通知
+  redis-key-prefix: bhop-broker-server-
+
+grpc-client:
+  stub-deadline: 8000
+  channel-info:
+    - channel-name: 'adminCommonGrpcChannel'
+      host: 'broker-admin-grpc-server.broker'
+      port: 7405
+      use-ssl: false
+    - channel-name: 'otcServerChannel'
+      host: 'otc-server'
+      port: 7231
+      user-ssl: false
+    - channel-name: 'bhChannel'
+      host: 'bh-server.bluehelix'
+      port: 7011
+      use-ssl: false
+    - channel-name: 'saasAdminGrpcChannel'
+      host: 'saas-admin-server'
+      port: 7401
+      use-ssl: false
+    - channel-name: 'commonServerChannel'
+      host: 'common-server'
+      port: 7220
+      use-ssl: false
+    - channel-name: 'brokerServerChannel'
+      host: 'broker-server'
+      port: 7023
+      use-ssl: false
+    - channelName: 'brokerAdminChannel'
+      host: 'broker-admin-grpc-server.broker'
+      port: 7405
+      useSsl: false
+    - channelName: 'quoteChannel'
+      host: 'quote-data-service.exchange'
+      port: 7063
+      use-ssl: false
+    - channel-name: 'clearChannel'
+      host: 'clear-gateway.clear'
+      port: 7270
+      use-ssl: false
+    - channel-name: 'quoteDataChannel'
+      host: 'quote-data-service.exchange'
+      port: 7063
+      use-ssl: false
+
+re-captcha-supplier: google  #google or gee or geeV3 or none
+re-captcha-secret-key: XXX  #google secret
+verify-captcha: true  #当不校验时，验证码实际不发送且无发送纪录，且默认123456有效
+global-notify-type: 3  #全局强制通知类型 1：all, 2：仅手机, 3：仅邮箱
+gee-test-config:
+  gee-test:
+    configs:
+      - id: XXX
+        private-key: XXX
+    gee-test-url: https://dkapi.geetest.com/deepknow/v2/verify
+
+logging:
+  config: classpath:logback.xml

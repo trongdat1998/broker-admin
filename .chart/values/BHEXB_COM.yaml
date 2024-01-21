@@ -1,0 +1,12 @@
+env:
+  JAVA_OPTS: "-Dprofile=product -Dcontainer=bhex -Dplatform:BROKER -Dspring.profiles.active=bhexb_com"
+ingress:
+  enabled: true
+  hosts:
+    - broker-admin.bit-e.com
+  paths:
+    - /api
+  tls:
+    - secretName: bit-e-com-tls-secret
+envFromSecrets:
+- ENCRYPT_PRIVATEKEY_PASSWORD

@@ -1,0 +1,4 @@
+env:
+  JAVA_OPTS: "-Dprofile=dev -Dcontainer=bhop -Dplatform:BROKER -Dspring.profiles.active=bhex_cn"
+envFromSecrets:
+- ENCRYPT_PRIVATEKEY_PASSWORD

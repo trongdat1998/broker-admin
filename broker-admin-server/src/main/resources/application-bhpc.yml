@@ -1,0 +1,75 @@
+spring:
+  redis:
+    lettuce:
+      pool:
+        max-active: 200
+        max-idle: 50
+        max-wait: 4s
+    timeout: 10s
+    cluster:
+      nodes:
+        - broker-admin-redis:6379
+authorize:
+  gaenable: false
+
+admincommon:
+  application-name: broker-admin-grpc-server
+  grpc-port: 7405
+
+grpc-client:
+  stub-deadline: 8000
+  channel-info:
+    - channel-name: 'adminCommonGrpcChannel'
+      host: 'broker-admin-grpc-server.broker'
+      port: 7405
+      use-ssl: false
+    - channel-name: 'otcServerChannel'
+      host: 'otc-server'
+      port: 7231
+      user-ssl: false
+    - channel-name: 'bhChannel'
+      host: 'bh-server.bluehelix'
+      port: 7011
+      use-ssl: false
+    - channel-name: 'saasAdminGrpcChannel'
+      host: 'saas-admin-server'
+      port: 7401
+      use-ssl: false
+    - channel-name: 'commonServerChannel'
+      host: 'common-server'
+      port: 7220
+      use-ssl: false
+    - channel-name: 'brokerServerChannel'
+      host: 'broker-server'
+      port: 7023
+      use-ssl: false
+    - channelName: 'brokerAdminChannel'
+      host: 'broker-admin-grpc-server.broker'
+      port: 7405
+      useSsl: false
+    - channelName: 'quoteChannel'
+      host: 'quote-data-service.exchange'
+      port: 7063
+      use-ssl: false
+    - channel-name: 'clearChannel'
+      host: 'clear-gateway.clear'
+      port: 7270
+      use-ssl: false
+    - channel-name: 'quoteDataChannel'
+      host: 'quote-data-service.exchange'
+      port: 7063
+      use-ssl: false
+awsstorage:
+  aws:
+    bucket: static.nucleex.com
+    access-key: XXX
+    secret-key: XXX
+    region-name: ap-southeast-1
+  public:
+    static-url: https://static.nucleex.com/
+    prefix: banner/
+    aws:
+      bucket: static.nucleex.com
+      access-key: XXX
+      secret-key: XXX
+      region-name: ap-southeast-1

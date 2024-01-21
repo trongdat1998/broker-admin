@@ -1,0 +1,14 @@
+env:
+  JAVA_OPTS: "-Dprofile=product -Dcontainer=bhop -Dplatform:BROKER -Dspring.profiles.active=bhop_cloud"
+ingress:
+  enabled: true
+  hosts:
+    - broker-admin-7002.bhop.cloud
+    - broker-admin-7003.bhop.cloud
+    - broker-admin-7004.bhop.cloud
+  paths:
+    - /api
+  tls:
+    - secretName: bhop-cloud-tls-secret
+envFromSecrets:
+- ENCRYPT_PRIVATEKEY_PASSWORD
